@@ -1,0 +1,76 @@
+           <div
+                  className={`flex items-start gap-2.5 max-w-[80%] ${
+                    message.role === "user" ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  {message.role === "assistant" && (
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                  <div
+                    className={`p-3 rounded-2xl ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-white/10 text-white"
+                    }`}
+                  >
+                    {/* Render Markdown for assistant messages */}
+                    {message.role === "assistant" ? (
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    ) : (
+                      message.content
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 space-y-4 bg-gray-900/40 backdrop-blur-sm text-black">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend(input);
+              }}
+              className="relative"
+            >
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type a message..."
+                disabled={isLoading}
+                className="w-full bg-white border-transparent pr-12 rounded-xl"
+              />
+              <Button
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-transparent hover:bg-transparent"
+              >
+                <Send className="w-5 h-5 text-gray-500" />
+                <span className="sr-only">Send message</span>
+              </Button>
+            </form>
+
+            {/* Quick Questions */}
+            <div className="flex flex-wrap gap-2 justify-center pb-2">
+              {quickQuestions.map((question) => (
+                <Button
+                  key={question}
+                  variant="secondary"
+                  onClick={() => handleSend(question)}
+                  disabled={isLoading}
+                  className="bg-gray-700/50 hover:bg-gray-600/50 text-white border-0 rounded-full text-sm px-4 py-2"
+                >
+                  {question}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}

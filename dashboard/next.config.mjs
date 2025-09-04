@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',
-    basePath: '/dashboard',
-    assetPrefix: '/dashboard',
+    basePath: '/api/dashboard',
+    assetPrefix: '/api/dashboard',
     reactStrictMode: true,
     eslint: {
         ignoreDuringBuilds: true,  // Ignore ESLint errors during builds

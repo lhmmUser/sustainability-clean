@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 export const metadata: Metadata = {
-  title: "HappyTummy | Users",
+  title: "Sustainability | Users",
   description: "User profiles table for HappyTummy dashboard",
 };
 

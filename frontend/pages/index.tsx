@@ -112,7 +112,7 @@ const Home = () => {
       {/* Enhanced Dashboard Navigation */}
       <div className="fixed top-4 left-4 z-10">
         <a
-          href="https://happytummy.cognotools.dev/dashboard/"
+          href="http://52.66.236.182/dashboard/"
           className="group flex items-center px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-blue-100"
         >
           <div className="flex items-center justify-center bg-blue-50 rounded-full p-2 group-hover:bg-blue-100 transition-colors">

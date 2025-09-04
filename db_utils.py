@@ -10,7 +10,8 @@ from datetime import datetime, timedelta
 # DB_HOST = "localhost"
 # DB_PORT = "5432"
 
-DB_HOST ="database-1.cpkaga6akmlt.ap-south-1.rds.amazonaws.com"
+#DB_HOST ="database-1.cpkaga6akmlt.ap-south-1.rds.amazonaws.com"
+DB_HOST = "sustainability.cpkaga6akmlt.ap-south-1.rds.amazonaws.com"
 DB_PORT = 5432
 DB_NAME = "sustainability"
 DB_USER = "postgres"

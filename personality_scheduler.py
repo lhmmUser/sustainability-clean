@@ -8,14 +8,11 @@ from langchain_community.callbacks.manager import get_openai_callback
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from db_utils import get_last_3_days_user_queries, get_user_persona, update_persona
-#from const import USD_INR_CONVERSION_RATE, base_url, apim_key
+from const import USD_INR_CONVERSION_RATE, base_url, apim_key
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 load_dotenv()
 
-USD_INR_CONVERSION_RATE = 90
-base_url = os.getenv("base_url")
-apim_key = os.getenv("apim_key")
 
 async def batch_personality_analysis():
     """
@@ -85,21 +82,21 @@ Output Format:
                 ("human", prompt_template)
             ])
 
-            #llm = AzureChatOpenAI(
-            #    azure_endpoint=base_url,
-            #    openai_api_version="2025-01-01-preview",
-            #    deployment_name="gpt-4o-mini",
-            #    openai_api_key=apim_key,
-            #    temperature=0.2,
-            #)
+            llm = AzureChatOpenAI(
+                azure_endpoint=base_url,
+                openai_api_version="2025-01-01-preview",
+                deployment_name="gpt-4o-mini",
+                openai_api_key=apim_key,
+                temperature=0.2,
+            )
 
             
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash",
-                api_key = "AIzaSyAp_zaLyYW5BA-ZCj2YZ3AcOMtvjAJ1mTg",
-                temperature= 0.2,
-                streaming=True
-            )   
+            #llm = ChatGoogleGenerativeAI(
+            #    model="gemini-2.0-flash",
+            #    api_key = "AIzaSyAp_zaLyYW5BA-ZCj2YZ3AcOMtvjAJ1mTg",
+            #    temperature= 0.2,
+            #    streaming=True
+            #)   
             chain = prompt | llm
 
             with get_openai_callback() as cb:

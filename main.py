@@ -1,7 +1,7 @@
 import asyncio
 import os
 import json
-#from const import API_KEY
+from const import API_KEY
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -29,24 +29,26 @@ from fastapi.requests import Request
 from dotenv import load_dotenv
 load_dotenv()
 
-API_KEY = os.getenv("API_KEY")
 
 logging.basicConfig(level=logging.INFO)
 print(os.path.abspath(__file__))
 
+backend_app = FastAPI()
 app = FastAPI(title="Sustainability", docs_url = None)
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
-#app.mount("/dashboard", StaticFiles(directory="dashboard/out",
-#                             html=True), name = "test-dashboard")
+backend_app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.mount("/chat",StaticFiles(directory="chat/out",
+backend_app.mount("/dashboard", StaticFiles(directory="dashboard/out",
+                             html=True), name = "test-dashboard")
+
+backend_app.mount("/chat",StaticFiles(directory="chat/out",
                               html=True), name = "test-agent")
 
-app.mount("/prompt", StaticFiles(directory="frontend/out", 
+backend_app.mount("/prompt", StaticFiles(directory="frontend/out", 
                                  html=True), name="test-prompt")
 
-app.add_middleware(
+app.mount("/api",backend_app)
+backend_app.add_middleware(
     CORSMiddleware,
     allow_origins = ["*"],
     allow_credentials = True,
@@ -58,19 +60,19 @@ security = HTTPBearer()
 print(security,'security')
 print(os.path.abspath(__file__))
 
-@app.on_event("startup")
+@backend_app.on_event("startup")
 async def startup_event():
     setup_personality_analysis_scheduler()
 
-@app.get("/docs",include_in_schema=False)
+@backend_app.get("/docs",include_in_schema=False)
 async def swagger_ui_html():
     return get_swagger_ui_html(
         openapi_url="/openapi.json",
         title="Sustaianability",
-        swagger_favicon_url="/static/favicon.ico"
+        swagger_favicon_url="/static/favico.ico"
     )
 
-@app.get("/get-prompt",include_in_schema=False)
+@backend_app.get("/get-prompt",include_in_schema=False)
 async def get_prompt(credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
         if not verify_bearer_token(credentials):
@@ -102,7 +104,7 @@ async def get_prompt(credentials: HTTPAuthorizationCredentials = Depends(securit
             status_code=500, detail = "An unexpected error occured."
         )
     
-@app.post("/update-prompt", include_in_schema=False)
+@backend_app.post("/update-prompt", include_in_schema=False)
 async def update_prompt(prompt_update: PromptUpdate, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
         if not verify_bearer_token(credentials):
@@ -131,7 +133,7 @@ async def update_prompt(prompt_update: PromptUpdate, credentials: HTTPAuthorizat
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/generate-bearer-token")
+@backend_app.post("/generate-bearer-token")
 async def generate_bearer_token(token_request: TokenRequest):
     try:
 
@@ -165,7 +167,7 @@ async def generate_bearer_token(token_request: TokenRequest):
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.post("/upsert-user")
+@backend_app.post("/upsert-user")
 async def register_user(user_details: UserDetails, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
         # Verify API key
@@ -221,7 +223,7 @@ async def register_user(user_details: UserDetails, credentials: HTTPAuthorizatio
         raise HTTPException(
             status_code=500, detail=f"An unexpected error occurred: {str(e)}.")
 
-@app.post("/send-message")
+@backend_app.post("/send-message")
 async def send_message(
     request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(security)
@@ -374,7 +376,7 @@ async def send_message(
 #         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/update-feedback")
+@backend_app.post("/update-feedback")
 async def handle_feedback(feedback: FeedbackUpdate, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -422,7 +424,7 @@ async def handle_feedback(feedback: FeedbackUpdate, credentials: HTTPAuthorizati
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.get("/get-message/{message_id}")
+@backend_app.get("/get-message/{message_id}")
 async def get_message(message_id: str, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -463,7 +465,7 @@ async def get_message(message_id: str, credentials: HTTPAuthorizationCredentials
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.get("/messages/{user_id}")
+@backend_app.get("/messages/{user_id}")
 async def get_messages(user_id: str, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -505,7 +507,7 @@ async def get_messages(user_id: str, credentials: HTTPAuthorizationCredentials =
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.get("/messages")
+@backend_app.get("/messages")
 async def get_all_messages(credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -545,7 +547,7 @@ async def get_all_messages(credentials: HTTPAuthorizationCredentials = Depends(s
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.get("/users/{user_id}")
+@backend_app.get("/users/{user_id}")
 async def get_personas(user_id: str, credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -590,7 +592,7 @@ async def get_personas(user_id: str, credentials: HTTPAuthorizationCredentials =
         )
 
 
-@app.get("/users")
+@backend_app.get("/users")
 async def get_all_personas(credentials: HTTPAuthorizationCredentials = Depends(security)):
 
     try:
@@ -633,7 +635,7 @@ async def get_all_personas(credentials: HTTPAuthorizationCredentials = Depends(s
         )
 
 
-@app.get("/analytics")
+@backend_app.get("/analytics")
 async def get_message_analytics(credentials: HTTPAuthorizationCredentials = Depends(security)):
     try:
 
@@ -670,7 +672,7 @@ async def get_message_analytics(credentials: HTTPAuthorizationCredentials = Depe
             status_code=500, detail="An unexpected error occurred.")
 
 
-@app.get("/")
+@backend_app.get("/")
 async def root():
     return {"message": "Hello from root!"}
 

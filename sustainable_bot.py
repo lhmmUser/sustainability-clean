@@ -5,19 +5,15 @@ from db_utils import add_message, get_user_conversations
 from langchain_community.callbacks.manager import get_openai_callback
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-#from const import USD_INR_CONVERSION_RATE, base_url, apim_key, OPEN_API_KEY
+from const import USD_INR_CONVERSION_RATE, base_url, apim_key, OPEN_API_KEY
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 load_dotenv()
 
-USD_INR_CONVERSION_RATE = 90
-base_url = os.getenv("base_url")
-apim_key = os.getenv("apim_key")
-OPEN_API_KEY = os.getenv("OPEN_API_KEY")
 
 async def generate_sustainable_bot_response(user_id, session_id, user_query, name, age, gender, city, start_time, prompt_template):
-    #conversations_history = get_user_conversations(user_id, session_id)
-    conversations_history = []
+    conversations_history = get_user_conversations(user_id, session_id)
+    
     conversation_context = []
 
     if conversations_history:
@@ -37,7 +33,7 @@ async def generate_sustainable_bot_response(user_id, session_id, user_query, nam
         logging.info(conversations_history)
 
     prompt_suffix = f"\nHere are the user details: Name: {name}, age: {age}, gender: {gender}, city: {city}"
-
+    	
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", prompt_template + prompt_suffix),
@@ -45,22 +41,29 @@ async def generate_sustainable_bot_response(user_id, session_id, user_query, nam
             ("human", "{input}"),
         ]
     )
-    
-    # llm = AzureChatOpenAI(
-    #     azure_endpoint=base_url,
-    #     openai_api_version="2025-01-01-preview",
-    #     deployment_name="gpt-4o-mini",
-    #     openai_api_key=apim_key,
-    #     temperature=0.2,
-    #     streaming=True
-    # )
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash",
-        api_key = "AIzaSyAp_zaLyYW5BA-ZCj2YZ3AcOMtvjAJ1mTg",
-        temperature= 0.2,
-        streaming=True
-    )
+    llm = ChatOpenAI(
+	model="gpt-4o-mini",
+	api_key = OPEN_API_KEY,
+	temperature=0.2,
+	streaming=True
+    )	
+    
+    #llm = AzureChatOpenAI(
+    #    azure_endpoint=base_url,
+    #    openai_api_version="2025-01-01-preview",
+    #    deployment_name="gpt-4o-mini",
+    #    openai_api_key=apim_key,
+    #    temperature=0.2,
+    #    streaming=True
+    #)
+
+    #llm = ChatGoogleGenerativeAI(
+    #    model="gemini-2.0-flash",
+    #    api_key = "AIzaSyAp_zaLyYW5BA-ZCj2YZ3AcOMtvjAJ1mTg",
+    #    temperature= 0.2,
+    #    streaming=True
+    #)
 
     chain = prompt | llm
     answer_text = ""

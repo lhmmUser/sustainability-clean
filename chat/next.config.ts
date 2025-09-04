@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   output: 'export',
-  basePath: '/chat',
+  basePath: '/api/chat',
   eslint: {
     ignoreDuringBuilds: true,  // Ignore ESLint errors during builds
   },

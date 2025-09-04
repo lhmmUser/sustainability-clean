@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   output: 'export',
-  basePath: '/prompt',
+  basePath: '/api/prompt',
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,  // Ignore ESLint errors during builds

@@ -63,8 +63,9 @@ export function ChatInterface() {
       role: "assistant",
       timestamp: Date.now(),
     };
+    
     setMessages((prev) => [...prev, assistantMessage]);
-
+    
     // Track the assistant's response
     let assistantContent = "";
 
@@ -72,6 +73,7 @@ export function ChatInterface() {
       // Send the user's message and update assistant's content in chunks
       await sendMessage(message, (chunk) => {
         assistantContent += chunk; // Append chunks to the assistant content
+        
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === assistantMessageId
@@ -79,6 +81,7 @@ export function ChatInterface() {
               : msg
           )
         );
+        
       });
     } catch (error) {
       console.error("Error sending message:", error);

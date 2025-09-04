@@ -1,6 +1,6 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+//const API_BASE_URL = "http://127.0.0.1:8000";
 //const API_BASE_URL = "https://happytummy.cognotools.dev";
-
+const API_BASE_URL = "/api";
 let bearerToken: string | null = null; // Store the token in memory
 let tokenExpiryTime: number | null = null; // Track when the token expires
 
@@ -8,7 +8,7 @@ let tokenExpiryTime: number | null = null; // Track when the token expires
 const fetchBearerToken = async () => {
   const response = await fetch(`${API_BASE_URL}/generate-bearer-token`, {
     method: "POST",
-    body: JSON.stringify({ api_key: "9b05c2f3302844b5b3a0930312399cd8" }),
+    body: JSON.stringify({ api_key: "8ad7be87218b415babe063c381099b62" }),
     headers: { "Content-Type": "application/json" },
   });
 

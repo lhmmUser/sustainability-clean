@@ -88,7 +88,7 @@ const menuGroups = [
     menuItems: [
       {
         label: "Chat Interface",
-        route: "http://127.0.0.1:8000/chat/",
+        route: "http://52.66.236.182/chat/",
         external: true,
         externalIcon: (
           <svg
@@ -123,16 +123,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-          <Link href="/">
+          <Link href="/" className="flex items-center gap-2">
             <Image
-              width={176}
-              height={32}
+              width={52}
+              height={52}
               src={
-                "https://happytummy.cognotools.dev/dashboard/images/logo/happy_tummy_logo.svg"
+                "https://diffrun.com/api/dashboard/images/brandmaska_logo.jpeg"
               }
               alt="Logo"
               priority
+	      className="rounded-full object-cover"	
             />
+            <p className="text-lg font-semibold text-white whitespace-nowrap">Brand Maska</p>
           </Link>
 
           <button

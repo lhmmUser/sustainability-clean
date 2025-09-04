@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "HappyTummy | Dashboard",
+  title: "Sustainability | Dashboard",
   description: "AI companion for health-related queries",
 };
 
